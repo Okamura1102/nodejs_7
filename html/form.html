@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>入力フォーム</title>
+    </head>
+    <style>
+        form {
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            width: 100%;
+        }
+        #Name, #kana_name, #gender, #email, #phone, #address, #workplace, #household {
+            width: 20%;
+            height: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        #household {
+            margin-bottom: 20px;
+        }
+        #button {
+            width: 5%;
+        }
+    </style>
+    <body>
+        <h1>入力フォーム</h1>
+        <!--ここに追加-->
+        <form action="/" method="post" id="form">
+            <div class="form-group">
+                <label for="Name">name</label><br>
+                <input type="text" id="Name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="kana_name">kana_name</label><br>
+                <input type="text" id="kana_name" name="kana_name">
+            </div>
+            <div class="form-group">
+                <label for="gender">gender</label><br>
+                <input type="text" id="gender" name="gender" placeholder="男性or女性と入力して下さい">
+            </div>
+            <div class="form-group">
+                <label for="email">email</label><br>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">phone</label><br>
+                <input type="text" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="address">address</label><br>
+                <input type="text" id="address" name="address">
+            </div>
+            <div class="form-group">
+                <label for="workplace">workplace</label><br>
+                <input type="text" id="workplace" name="workplace">
+            </div>
+            <div class="form-group">
+                <label for="household">household</label><br>
+                <input type="text" id="household" name="household">
+            </div>
+            <input type="submit" id="button" value="送信">
+        </form>

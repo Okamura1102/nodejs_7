@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="../style.css">
+        <title>personas list</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>personas list</h1>
+        <div class="serchList">
+            <div class="newList">
+                <p><a href="/create">新規情報追加</a></p>
+            </div>
+            <div class="detail">
+                <form id="action">
+                    <input type="text" id="searchInput" placeholder="名前入力">
+                    <input type="button" id="searchButton" value="検索">
+                    <!-- <p id="nameSerch"></p> -->
+                </form>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>kana_name</th>
+                    <th>gender</th>
+                    <th>email</th>
+                    <th>phone</th>
+                    <th>address</th>
+                    <th>workplace</th>
+                    <th>household</th>
+                    <th>更新</th>
+                    <th>削除</th>
+                    <th>選択した情報一覧</th>
+                </tr>
+            </thead>
+            <tbody id="personasTableBody">
+                <% personas.forEach(function (personas) { %>
+                    <tr>
+                        <td>
+                            <%= personas.id %>
+                        </td>
+                        <td>
+                            <%= personas.name %>
+                        </td>
+                        <td>
+                            <%= personas.kana_name %>
+                        </td>
+                        <td>
+                            <%= personas.gender %>
+                        </td>
+                        <td>
+                            <%= personas.email %>
+                        </td>
+                        <td>
+                            <%= personas.phone %>
+                        </td>
+                        <td>
+                            <%= personas.address %>
+                        </td>
+                        <td>
+                            <%= personas.workplace %>
+                        </td>
+                        <td>
+                            <%= personas.household %>
+                        </td>
+                        <td><a href="/edit/<%= personas.id %>">更新</a></td>
+                        <td><a href="/delete/<%= personas.id %>">削除</a></td>
+                        <td><input type="checkbox" name="selectedPersonas" value="<%= personas.id %>" onchange="addToCart(this)"></td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+        <h2>選択した情報一覧（カート）</h2>
+        <ul id="cartItems"></ul>
+        <h2>統計情報</h2>
+        <div class="sex">
+            <p>男性: <span id="maleCount">0</span>人</p>
+            <p>女性: <span id="femaleCount">0</span>人</p>
+        </div>
+        <p>各都道府県人数(世帯主):</p>
+        <ul id="workplaceStats"></ul>
+        <p>各世帯数人数:</p>
+        <ul id="householdStats"></ul>
+        <div class="btn">
+            <button onclick="calculateStatistics()">統計を取得</button>
+        </div>
+        <script type="text/javascript">
+            let personas = JSON.parse('<%= JSON.stringify(personas) %>'.replace(/&#34;/g, '"'));
+
+            // リストにある名前を検索すると、その人物の情報だけが一覧表示される
+            function filterTable() {
+                const searchInput = document.getElementById('searchInput');
+                // 表一覧が格納されているpersonasTableBodyを取得
+                const personasTableBody = document.getElementById('personasTableBody');
+                // 表(personasTableBody)の各行（<tr>）を取得
+                const tr = personasTableBody.getElementsByTagName('tr');
+                // 検索テキストを取得して小文字に変換
+                const searchText = searchInput.value.toLowerCase();
+
+                for (let i = 0; i < tr.length; i++) {
+                    const row = tr[i];
+                    const nameCell = row.getElementsByTagName('td')[1]; // 名前セルは2番目のセル（インデックス番号）
+                    // 名前セルのテキストを取得して小文字に変換
+                    const name = nameCell.textContent.toLowerCase();
+
+                    // 検索テキストが名前に含まれるかをチェック
+                    if (name.includes(searchText)) {
+                        // 一致する行を表示
+                        row.style.display = '';
+                    } else {
+                        // 非一致の行を非表示にする
+                        row.style.display = 'none';
+                    }
+                }
+            }
+            const searchButton = document.getElementById('searchButton');
+            searchButton.addEventListener('click', filterTable);
+
+
+            // カート機能
+            function addToCart(checkbox) {
+                const cartItems = document.getElementById('cartItems');
+                const personasId = checkbox.value;
+
+                if (checkbox.checked) {
+                    // チェックされたらカートに追加
+                    const tr = checkbox.parentNode.parentNode;
+                    const rowData = Array.from(tr.children).map(cell => cell.innerText);
+                    // 「-3」をしてチェックボックス、更新、削除ボタンを非表示にする
+                    const itemDetails = rowData.slice(0, -3).join(', ');
+
+                    const li = document.createElement('li');
+                    li.textContent = itemDetails;
+                    cartItems.appendChild(li);
+
+                    // 選択した行を表一覧から非表示にする
+                    tr.style.display = 'none';
+                } else {
+                    // チェックが外れた場合はカートから削除
+                    const cartItemsList = cartItems.querySelectorAll('li');
+                    for (const item of cartItemsList) {
+                        if (item.textContent.includes(personasId)) {
+                            cartItems.removeChild(item);
+                            break;
+                        }
+                    }
+                    // 選択した行を表一覧に再表示する
+                    // const tr = checkbox.parentNode.parentNode;
+                    tr.style.display = '';
+                }
+            }
+
+
+            // 統計を取得
+            function calculateStatistics() {
+                const maleCount = document.getElementById('maleCount');
+                const femaleCount = document.getElementById('femaleCount');
+                const workplaceStats = document.getElementById('workplaceStats');
+                const householdStats = document.getElementById('householdStats');
+
+                // 表の情報を取得
+                const rows = document.querySelectorAll('table tr');
+                const statistics = {
+                    male: 0,
+                    female: 0,
+                    workplace: {},
+                    household: {}
+                };
+
+                for (let i = 1; i < rows.length; i++) { // 表の表示したい部分をインデックス番号で指定
+                    const rowData = Array.from(rows[i].children).map(cell => cell.innerText.trim());
+                    const gender = rowData[3];
+                    const workplace = rowData[7];
+                    const household = rowData[8];
+
+                    if (gender === '男性') {
+                        statistics.male++;
+                    } else if (gender === '女性') {
+                        statistics.female++;
+                    }
+
+                    statistics.workplace[workplace] = (statistics.workplace[workplace] || 0) + 1;
+                    statistics.household[household] = (statistics.household[household] || 0) + 1;
+                }
+
+                maleCount.textContent = statistics.male;
+                femaleCount.textContent = statistics.female;
+
+                // 各都道府県人数
+                let workplaceStatsText = '';
+                for (const [workplace, count] of Object.entries(statistics.workplace)) {
+                    workplaceStatsText += ` ${workplace}: ${count}人,`;
+                }
+                workplaceStatsText = workplaceStatsText.slice(0, -1);
+                workplaceStats.textContent = workplaceStatsText;
+
+                // 各世帯数人数
+                let householdStatsText = '';
+                for (const [household, count] of Object.entries(statistics.household)) {
+                    householdStatsText += ` ${household}世帯: ${count}組,`;
+                }
+                householdStatsText = householdStatsText.slice(0, -1);
+                householdStats.textContent = householdStatsText;
+            }
+        </script>

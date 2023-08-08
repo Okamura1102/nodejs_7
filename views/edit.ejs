@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>personas Edit</title>
+    </head>
+    <style>
+        form {
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            width: 100%;
+        }
+
+        #Name,
+        #kana_name,
+        #gender,
+        #email,
+        #phone,
+        #address,
+        #workplace,
+        #household {
+            width: 20%;
+            height: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        #household {
+            margin-bottom: 20px;
+        }
+
+        #button {
+            width: 5%;
+        }
+
+        .sex {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 10px;
+        }
+        label {
+            padding-top: 5px;
+        }
+    </style>
+    <body>
+        <h1>更新フォーム</h1>
+        <form action="/update/<%= personas[0].id %>" method="POST">
+            <label for="Name">name</label><br>
+            <input type="text" id="Name" name="name" value="<%= personas[0].name %>"><br>
+            <label for="kana_name">kana_name</label><br>
+            <input type="text" id="kana_name" name="kana_name" value="<%= personas[0].kana_name %>"><br>
+            <div class="sex">
+                <label for="gender1">男性</label><br>
+                <input type="radio" id="gender1" name="gender" value="<%= personas[0].gender %>"><br>
+                <label for="gender2">女性</label><br>
+                <input type="radio" id="gender2" name="gender" value="<%= personas[0].gender %>"><br>
+            </div>
+            <label for="email">email</label><br>
+            <input type="text" id="email" name="email" value="<%= personas[0].email %>"><br>
+            <label for="phone">phone</label><br>
+            <input type="text" id="phone" name="phone" value="<%= personas[0].phone %>"><br>
+            <label for="address">address</label><br>
+            <input type="text" id="address" name="address" value="<%= personas[0].address %>"><br>
+            <label for="workplace">workplace</label><br>
+            <input type="text" id="workplace" name="workplace" value="<%= personas[0].workplace %>"><br>
+            <label for="household">household</label><br>
+            <input type="text" id="household" name="household" value="<%= personas[0].household %>"><br>
+            <button type="submit" id="button">更新</button>
+        </form>
+    </body>
+</html>

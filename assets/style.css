@@ -1,0 +1,46 @@
+h1 {
+  text-align: center;
+}
+table {
+  width: 100%;
+  border-collapse:collapse;
+}
+th, td {
+  width: 250px;
+  height: 50px;
+  text-align: center;
+  border-bottom: 1px solid #c0c0c0;
+}
+.serchList {
+  text-align: center;
+}
+#cart {
+  text-align: right;
+  display: inline-flex;
+}
+
+h2 {
+  text-align: center;
+}
+
+.sex {
+  display: flex;
+  justify-content: center;
+}
+
+p {
+  text-align: center;
+}
+
+#workplaceStats, #householdStats, .btn {
+  text-align: center;
+}
+
+#workplaceStats {
+  padding: 0 25%;
+}
+
+#cartItems {
+  text-align: center;
+  list-style: none;
+}
